@@ -29,3 +29,7 @@ show image on server without X display  installed
   ![](doc/images/catimg.3.png)
   
   
+## Others
+
+just map the bgr color-space to ansi-256 color-space
+handled pixel-by-pixel, so its slow................
