@@ -97,23 +97,30 @@ def npixel2rgb(narr):
     b = narr[2]
     return((r,g,b))
 
-def square(x):
-    return(x*x)
 
 def distance(p1,p2):
-    r1 = p1[0]
-    g1 = p1[1]
-    b1 = p1[2]
-    r2 = p2[0]
-    g2 = p2[1]
-    b2 = p2[2]
-    return(int(math.sqrt(square(r1-r2)+square(g1-g2)+square(b1-b2))))
+    vector1 = np.array(p1)
+    vector2 = np.array(p2)
+    diff = vector2 - vector1
+    squareDistance = np.dot(diff.T, diff)
+    return(math.sqrt(squareDistance))
+
 
 def find_index(p):
-    def map_func(ele,p):
-        return(distance(ele,p))
-    arr = elel.mapv(RGB_CLUT,map_func,[p])
-    return(arr.index(min(arr)))
+    nodes = np.asarray(RGB_CLUT)
+    deltas = nodes - p
+    dist = np.einsum('ij,ij->i', deltas, deltas)
+    return(np.argmin(dist))
+
+####
+
+#####
+
+
+#####
+
+####
+
 
 def linefill(line,c):
     def map_func(colorId,c):
@@ -125,9 +132,8 @@ def linefill(line,c):
 def img2ansi256indexes(img,c):
     lines = elel.init(img.__len__(),[])
     for i in range(lines.__len__()):
-        line = lines[i]
-        line = elel.mapv(img[i],npixel2rgb)
-        line = elel.mapv(line,find_index)
+        line = img[i]
+        line = list(map(find_index,line))
         line = elel.join(linefill(line,c),"")
         lines[i] = line
     return(lines)
@@ -164,5 +170,3 @@ if(__name__=="__main__"):
         wfile(fn,s)
 else:
     pass
-
-    
